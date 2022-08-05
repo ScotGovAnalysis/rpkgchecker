@@ -15,6 +15,6 @@ check_r_version_required <- function(package_requirements_df) {
     }
   }
   else {
-    print(paste("R version required for packages is lower or equal to currently installed version,", r_current_version))
+    cat(green(paste("R version required for packages is lower or equal to currently installed version,", r_current_version)))
   }
 }
