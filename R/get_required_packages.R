@@ -51,19 +51,22 @@ get_required_packages <- function(cleaned_all_package_df, package_name) {
   
   # Get other dependent packages aside from R itself and max version of package required where it is a dependent
   dep_versions <- cleaned_all_package_df %>%
-    filter(dep_package %in% required_packages & dep_package != "R" & !is.na(dep_version)) %>%
+    filter(package %in% required_packages & (dep_package != "R") & (! is.na(dep_version))) %>%
     group_by(dep_package) %>%
     summarise(dep_version = max(dep_version))
   
+  
   # Get the max dep package version columns that want, i.e. the dependencies column showing for example "Rcpp(>=1.0.9)"
   dep_versions <- cleaned_all_package_df %>%
-    select(dep_package, dep_version, dependencies) %>%
+    filter(package %in% required_packages & (dep_package != "R") & (! is.na(dep_version))) %>%
     inner_join(dep_versions, by = c("dep_package" = "dep_package", "dep_version" = "dep_version")) %>%
     select(dep_package, dependencies) %>%
     rename(package_version_required = dependencies) %>%
-    distinct()
+    distinct(dep_package, package_version_required)
+    
   # Join the version required to the output dataframe
   requirements_output <- requirements_output %>% left_join(dep_versions, by = c("package" = "dep_package"))
+
   
   # Specify a custom sort order with the input package as the top of the output df and all other packages after
   package_order <- c(package_name, requirements_output %>% filter(package != package_name) %>% pull(package))
