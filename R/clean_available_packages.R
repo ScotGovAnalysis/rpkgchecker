@@ -10,7 +10,7 @@ library(readr)
 #' @export
 #'
 get_cleaned_available_packages <- function() {
-  available_packages <- available.packages() %>%
+  available_packages <- available.packages(repos="http://cran.rstudio.com") %>%
     # Make a tibble from df
     as_tibble() %>%
     # Make column names lower case
