@@ -74,7 +74,7 @@ if (nrow(package_requirements_checked) > 1) {
     cat(paste0("[", package_requirements_checked[i, "package"], "]", "(", package_requirements_checked[i, "package_url"], "), "))
   }
 } else {
-  cat(paste("no dependent packages for", search_package))
+  cat(paste("no dependent packages to install for", search_package))
 }
 ```
 
@@ -83,12 +83,12 @@ if (nrow(package_requirements_checked) > 1) {
 # Check package R version required against installed version
 r_current_version <- paste0(R.Version()$major, ".", R.Version()$minor) # get current R version
 if (is.logical(check_version)) {
-  cat(paste("Current R version", "<b>", r_current_version, "</b>", "meets the minimum R version supported for latest version of", search_package, "and dependent packages."))
+  cat(paste("Current R version", "", r_current_version, "", "meets the minimum R version supported for latest version of", search_package, "and dependent packages."))
 } else {
   cat(paste("Warning! Current version of R,", r_current_version, "is lower than R version required for latest version of packages:", "<br>"))
   for (i in 1:nrow(check_version)) {
-    row_show <- paste(check_version[i, 1], check_version[i, 2], "requires R", check_version[i, 6], check_version[i, 7])
-    cat(row_show, "<br>")
+    row_show <- paste(check_version[i, 1], "",check_version[i, 2], "","requires R", "",check_version[i, 6],"", check_version[i, 7])
+    cat(paste(row_show, "<br>It might be possible to use an older version of this package with R", "", r_current_version, ""))
   }
 }
 ```
@@ -139,5 +139,7 @@ if (nrow(packages_ok_on_server) >= 0) {
   for (i in 1:nrow(packages_ok_on_server)) {
     cat(paste(packages_ok_on_server[i, "package"], packages_ok_on_server[i, "server_version"], "<br>"))
   }
+} else {
+  cat("No dependent package")
 }
 ```
