@@ -1,11 +1,10 @@
 # Use this script to generate the html rmmarkdown report for a specific package regarding its R version and package dependencies
 
-library(rmarkdown)
 source("R/clean_available_packages.R")# custom function to clean utils::available.packages() df
-source("R/generate_rpackage_report.R")
+source("R/generate_rpackage_report.R")# custom function to generate html report
 
 # Set the name of the package to search
-search_package <- "A3"
+search_package <- "MatchIt"
 
 # Need to refresh the CRAN package info from utils::available.packages() if not done so today
 refresh_all_package_info <- TRUE
