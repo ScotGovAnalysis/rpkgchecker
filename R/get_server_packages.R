@@ -1,5 +1,5 @@
 get_server_packages <- function(server_package_dir) {
-  server_packages <- list.files(packages_dir, pattern = "*") %>%
+  server_packages <- list.files(server_package_dir, pattern = "*") %>%
     as_tibble() %>%
     rename(server_file_name = value)
 
