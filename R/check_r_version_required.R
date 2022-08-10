@@ -8,13 +8,9 @@ check_r_version_required <- function(package_requirements_df) {
   r_current_version <- paste0(R.Version()$major, ".", R.Version()$minor)
   exceed_version <- r_requirements %>% filter(r_install_version > r_current_version)
   if (nrow(exceed_version) > 0) {
-    cat(paste(red("Warning! Current version of R,", r_current_version, "is lower than R version required for latest version of packages:\n")))
-    for (i in 1:nrow(exceed_version)) {
-      row_show <- paste(exceed_version[i, 1], exceed_version[i, 2], "requires R", exceed_version[i, 6], exceed_version[i, 7])
-      cat(red(row_show), "\n")
-    }
+    return(exceed_version)
   }
   else {
-    cat(green(paste("R version required for packages is lower or equal to currently installed version,", r_current_version)))
+    return(FALSE)
   }
 }
