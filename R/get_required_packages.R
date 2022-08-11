@@ -66,11 +66,6 @@ get_required_packages <- function(cleaned_all_package_df, package_name) {
     
   # Join the version required to the output dataframe
   requirements_output <- requirements_output %>% left_join(dep_versions, by = c("package" = "dep_package"))
-
-  
-  # Specify a custom sort order with the input package as the top of the output df and all other packages after
-  package_order <- c(package_name, requirements_output %>% filter(package != package_name) %>% pull(package))
-  requirements_output <- requirements_output %>% arrange(factor("package", levels = package_order))
   
   return(requirements_output)
 }

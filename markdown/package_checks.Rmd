@@ -1,0 +1,148 @@
+---
+title: "R Package Checker"
+output: 
+  html_document:
+    theme: flatly
+params:
+  package_to_check: "raster"
+  server_dir: "//s1428a/R_Packages/R_3_6_3_Packages"
+---
+<style type="text/css">
+  body{
+  font-size: 12pt;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("../R/get_required_packages.R") # filter cleaned
+source("../R/clean_available_packages.R") # custom function to clean utils::available.packages() df
+source("../R/check_r_version_required.R") # check version of R is >= to min R required for packages
+source("../R/get_server_packages.R")
+source("../R/compare_available_server_packages.R")
+source("../R/utils.R")
+```
+
+**Note:** This analysis looks at the latest version of packages available on [CRAN](https://cran.r-project.org/) and compares this to the currently installed version of R and the copies of packages currently available on a specified server.  It does not consider older, archived versions of a package or older, archived versions of dependent packages.
+
+```{r package-filter, include=FALSE}
+search_package <- params$package_to_check # input param for search package
+search_package_url <- paste0("https://cran.r-project.org/web/packages/", search_package, "/index.html") # derive url for package
+server_dir <- params$server_dir #input param for server directory
+
+# Read package requirements if already exists, otherwise generate (calling generation of report from create_rpackage_report.R prevents stale copy)
+if (file.exists("../outputs/all_package_requirements.csv")) {
+  all_package_df <- read_csv("../outputs/all_package_requirements.csv")
+} else {
+  all_package_df <- get_cleaned_available_packages()
+}
+
+# Search for requirements for input package name
+package_requirements <- get_required_packages(cleaned_all_package_df = all_package_df, package_name = search_package)
+
+# Outcome of checking for R version required vs installed
+check_version <- check_r_version_required(package_requirements)
+
+# Get the zip files of R packages on server as tibble
+server_packages <- get_server_packages(server_dir)
+
+# Compare requirements with server copy
+package_requirements_checked <- compare_available_server_packages(package_requirements, server_packages)
+
+# Put input package at top of custom sort, otherwise alphabetic
+package_requirements_checked <- custom_sort_package_df(search_package, package_requirements_checked, "package")
+
+# Subset of "not on server" packages
+not_on_server <- package_requirements_checked %>% filter(server_status == "package not currently on server")
+
+# Subset of "need upgrading" packages
+need_upgrading_on_server <- package_requirements_checked %>% filter(server_status == "server version need upgrading")
+
+# Subset of "everything fine currently" packages
+packages_ok_on_server <- package_requirements_checked %>% filter(server_status == "server version currently OK")
+
+main_package_version <- package_requirements %>% filter(package==search_package) %>% pull(latest_version)
+```
+
+
+## Package Requirements for [`r paste0(search_package, " v", main_package_version)`](`r search_package_url`)
+
+```{r all-packages, results="asis", echo=FALSE}
+# Full package list display with hyperlinks to each
+if (nrow(package_requirements_checked) > 1) {
+  cat(paste("The following", nrow(package_requirements_checked) - 1, "package(s) are required:<br>"))
+  for (i in 2:nrow(package_requirements_checked)) {
+    # Constructing markdown hyperlink
+    cat(paste0("[", package_requirements_checked[i, "package"], "]", "(", package_requirements_checked[i, "package_url"], "), "))
+  }
+} else {
+  cat(paste("no dependent packages to install for", search_package))
+}
+```
+
+## R version check
+```{r version-check, results="asis", echo=FALSE}
+# Check package R version required against installed version
+r_current_version <- paste0(R.Version()$major, ".", R.Version()$minor) # get current R version
+if (is.logical(check_version)) {
+  cat(paste("Current R version", "", r_current_version, "", "meets the minimum R version supported for latest version of", search_package, "and dependent packages."))
+} else {
+  cat(paste("Warning! Current version of R,", r_current_version, "is lower than R version required for latest version of packages:", "<br>"))
+  for (i in 1:nrow(check_version)) {
+    row_show <- paste(check_version[i, 1], "",check_version[i, 2], "","requires R", "",check_version[i, 6],"", check_version[i, 7])
+    cat(paste(row_show, "<br>It might be possible to use an older version of this package with R", "", r_current_version, ""))
+  }
+}
+```
+
+
+## Required packages not currently on server
+```{r packages-not-on-server, results="asis", echo=FALSE}
+# List packages that not on server currently with their hyperlinks
+if (nrow(not_on_server) > 0) {
+  cat("The following packages need adding to the server:<br>")
+  for (i in 1:nrow(not_on_server)) {
+    cat(paste(not_on_server[[i, "package"]], not_on_server[[i, "latest_version"]], not_on_server[[i, "package_url"]], "<br>"))
+  }
+} else {
+  cat("All packages exist on server, but some may need upgrading (see below).")
+}
+```
+
+
+
+## Required packages that need upgrading from the existing version on server
+```{r packages-to-upgrade, results="asis", echo=FALSE}
+# List packages that on server, but need upgrading for one or more dependent packages. 
+# Want to show which packages in particular dependent on an upgraded version
+if (nrow(need_upgrading_on_server) > 0) {
+  cat("These packages exist on the server currently, but need upgrading:<br>")
+  for (i in 1:nrow(need_upgrading_on_server)) {
+    the_package <- need_upgrading_on_server[[i, "package"]]
+    the_server_version <- need_upgrading_on_server[[i, "server_version"]]
+    need_higher_version <- all_package_df %>%
+      filter((package %in% package_requirements$package) & (dep_package == the_package) & (dep_version > the_server_version)) %>%
+      mutate(combined_p_v = paste0(package, "(", version, ")")) %>%
+      pull(combined_p_v)
+    need_higher_version <- capture.output(cat(need_higher_version, sep = ", "))
+    cat(paste("<b>", the_package, "</b>", "currently on server", "<b>", the_server_version, "</b>- requires upgrading", "to latest version <b>", need_upgrading_on_server[[i, "latest_version"]], "</b>", need_upgrading_on_server[[i, "package_url"]], "<br>(upgrade required by", need_higher_version, ")<br>"))
+  }
+} else {
+  cat("No packages need upgrading")
+}
+```
+
+
+
+## Required packages that are already on server and do not need upgrading
+```{r packages-are-ok, results="asis", echo=FALSE}
+# Simply list the packages that are both on server and don't need an upgrade
+if (nrow(packages_ok_on_server) >= 0) {
+  cat("These packages are on the server already and meet the min required version of the package:<br>")
+  for (i in 1:nrow(packages_ok_on_server)) {
+    cat(paste(packages_ok_on_server[i, "package"], packages_ok_on_server[i, "server_version"], "<br>"))
+  }
+} else {
+  cat("No dependent package")
+}
+```

@@ -10,7 +10,8 @@ library(readr)
 #' @export
 #'
 get_cleaned_available_packages <- function() {
-  available_packages <- available.packages() %>%
+  # Get available packages without any filters but duplicates and ignore a cached copy
+  available_packages <- available.packages(repos="http://cran.r-project.org", filters=c("duplicates"), ignore_repo_cache = TRUE) %>%
     # Make a tibble from df
     as_tibble() %>%
     # Make column names lower case
