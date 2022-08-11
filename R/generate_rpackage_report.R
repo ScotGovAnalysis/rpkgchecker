@@ -4,7 +4,7 @@ generate_rpackage_report <- function(search_package, server_dir) {
   
   # Render the existing markdown report, passing in the search package and server directory
   # Save the resulting html in the outputs directory
-  render(file.path("markdown", "package_checks.Rmd"),
+  rmarkdown::render(file.path("markdown", "package_checks.Rmd"),
          output_file = output_html_file,
          output_dir = "outputs",
          params = list(
