@@ -4,7 +4,7 @@ output:
   html_document:
     theme: flatly
 params:
-  package_to_check: "dplyr"
+  package_to_check: "dbplyr"
   server_dir: "//s1428a/R_Packages/R_3_6_3_Packages"
 ---
 <style type="text/css">
@@ -60,10 +60,12 @@ need_upgrading_on_server <- package_requirements_checked %>% filter(server_statu
 
 # Subset of "everything fine currently" packages
 packages_ok_on_server <- package_requirements_checked %>% filter(server_status == "server version currently OK")
+
+main_package_version <- package_requirements %>% filter(package==search_package) %>% pull(latest_version)
 ```
 
 
-## Package Requirements for [`r search_package`](`r search_package_url`)
+## Package Requirements for [`r paste0(search_package, " v", main_package_version)`](`r search_package_url`)
 
 ```{r all-packages, results="asis", echo=FALSE}
 # Full package list display with hyperlinks to each
@@ -120,9 +122,10 @@ if (nrow(need_upgrading_on_server) > 0) {
     the_server_version <- need_upgrading_on_server[[i, "server_version"]]
     need_higher_version <- all_package_df %>%
       filter((package %in% package_requirements$package) & (dep_package == the_package) & (dep_version > the_server_version)) %>%
-      pull(package)
+      mutate(combined_p_v = paste0(package, "(", version, ")")) %>%
+      pull(combined_p_v)
     need_higher_version <- capture.output(cat(need_higher_version, sep = ", "))
-    cat(paste("<b>", the_package, "</b>", "currently on server", "<b>", the_server_version, "</b>- requires upgrading", "to latest version", need_upgrading_on_server[[i, "latest_version"]], need_upgrading_on_server[[i, "package_url"]], "<br>(upgrade required by", need_higher_version, ")<br>"))
+    cat(paste("<b>", the_package, "</b>", "currently on server", "<b>", the_server_version, "</b>- requires upgrading", "to latest version <b>", need_upgrading_on_server[[i, "latest_version"]], "</b>", need_upgrading_on_server[[i, "package_url"]], "<br>(upgrade required by", need_higher_version, ")<br>"))
   }
 } else {
   cat("No packages need upgrading")
