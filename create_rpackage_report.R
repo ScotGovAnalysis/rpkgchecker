@@ -4,7 +4,7 @@ source("R/clean_available_packages.R")# custom function to clean utils::availabl
 source("R/generate_rpackage_report.R")# custom function to generate html report
 
 # Set the name of the package to search
-search_package <- "MatchIt"
+search_package <- "raster"
 
 # Need to refresh the CRAN package info from utils::available.packages() if not done so today
 refresh_all_package_info <- TRUE

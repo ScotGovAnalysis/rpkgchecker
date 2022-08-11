@@ -4,7 +4,7 @@ output:
   html_document:
     theme: flatly
 params:
-  package_to_check: "dbplyr"
+  package_to_check: "raster"
   server_dir: "//s1428a/R_Packages/R_3_6_3_Packages"
 ---
 <style type="text/css">
