@@ -9,7 +9,7 @@ source("R/compare_available_server_packages.R")
 source("R/utils.R")
 
 # Name of package to search, e.g. tidyr, dplyr, stringr etc
-search_package <- "MatchIt"
+search_package <- "usethis"
 
 # Call custom function to get dependent packages R versions from cleaned up copy of utils::available.packages()
 package_requirements <- get_required_packages(cleaned_all_package_df = get_cleaned_available_packages(), package_name = search_package)
@@ -22,7 +22,7 @@ check_r_version_required(package_requirements)
 packages_dir <- "//s1428a/R_Packages/R_3_6_3_Packages"
 
 # Get the zip files of R packages on server as tibble
-server_packages <- get_server_packages(package_dir)
+server_packages <- get_server_packages(packages_dir)
 
 package_requirements_checked <- compare_available_server_packages(package_requirements, server_packages)
 
