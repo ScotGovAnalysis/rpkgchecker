@@ -1,38 +1,34 @@
-library(tibble)
-library(dplyr)
-library(tidyr)
-library(stringr)
-library(readr)
-
-#' Clean and reformat the utils::available.packages() dataframe.
+#' Available Packages Long Format
 #'
-#' @return Cleaned tibble
+#' This creates a tidy format tibble of package dependencies (depends, imports).
+#'
+#' @param cran_repo_url The url of the CRAN repository to check.
+#'
+#' @return Tibble of packages restructured in long format with one row per imports or depends package.
+#' @importFrom magrittr %>% 
 #' @export
 #'
-get_cleaned_available_packages <- function() {
-  # Get available packages without any filters but duplicates and ignore a cached copy
-  available_packages <- available.packages(repos="http://cran.r-project.org", filters=c("duplicates"), ignore_repo_cache = TRUE) %>%
-    # Make a tibble from df
-    as_tibble() %>%
+#' @examples
+#' available_packages_long()
+available_packages_long <- function(cran_repo_url = "win_binary_default") {
+  available_packages_tb(cran_repo_url) %>%
     # Make column names lower case
-    rename_all(., .funs = tolower) %>%
-    # Add url for package home page
-    mutate(package_url = paste0("https://cran.r-project.org/web/packages/", package, "/index.html")) %>%
+    dplyr::rename_all(., .funs = tolower) %>%
+    dplyr::mutate(package_url = paste0(repository, "/", package, ".zip")) %>%
     # Select relevant columns
-    select(package, version, package_url, depends, imports) %>%
+    dplyr:select(package, version, package_url, depends, imports) %>%
     # Only interested in depends and imports packages - make these long format
-    pivot_longer(cols = c(depends, imports), names_to = "requirement_type", values_to = "dependencies") %>%
+    tidyr::pivot_longer(cols = c(depends, imports), names_to = "requirement_type", values_to = "dependencies") %>%
     # Remove newline characters
-    mutate(dependencies = str_remove_all(dependencies, "\\n")) %>%
+    dplyr::mutate(dependencies = stringr::str_remove_all(dependencies, "\\n")) %>%
     # Different package dependencies on new rows
-    separate_rows(dependencies, sep = ",") %>%
+    tidyr::separate_rows(dependencies, sep = ",") %>%
     # Remove spaces
-    mutate(dependencies = str_remove_all(dependencies, "\\s")) %>%
+    dplyr::mutate(dependencies = stringr::str_remove_all(dependencies, "\\s")) %>%
     # Split package name from required version if specified into separate columns
-    separate(dependencies, sep = "\\(", into = c("dep_package", "dep_version"), remove = FALSE, extra = "merge", fill = "right") %>%
+    tidyr::separate(dependencies, sep = "\\(", into = c("dep_package", "dep_version"), remove = FALSE, extra = "merge", fill = "right") %>%
     # Split package version from >= comparator into separate columns
-    separate(dep_version, sep = "(?=\\d)", into = c("dep_comparator", "dep_version"), remove = TRUE, extra = "merge", fill = "right") %>%
+    tidyr::separate(dep_version, sep = "(?=\\d)", into = c("dep_comparator", "dep_version"), remove = TRUE, extra = "merge", fill = "right") %>%
     # Remove the trailing bracket from the version and replace = with . in version numbers
-    mutate(dep_version = str_replace_all(dep_version, "\\)", ""), dep_version = str_replace_all(dep_version, "-", "\\."))
-  return(available_packages)
+    dplyr::mutate(dep_version = stringr::str_replace_all(dep_version, "\\)", ""), dep_version = stringr::str_replace_all(dep_version, "-", "\\."))
 }
