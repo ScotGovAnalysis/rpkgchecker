@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' get_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
-get_server_packages <- function(server_package_dir) {
+existing_server_packages <- function(server_package_dir) {
   server_packages <- list.files(server_package_dir, pattern = "*") %>%
     tibble::as_tibble() %>%
     dplyr::rename(server_file_name = value)
