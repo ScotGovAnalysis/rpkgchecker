@@ -1,4 +1,8 @@
-#' Get all available packages as a tibble
+#' Get all available R packages as a tibble.
+#'
+#' The matrix available.packages is available with utils.
+#' This will extract the matrix from the specified CRAN repository
+#' and convert it to a tibble.
 #'
 #' @param repo_url The url of the CRAN repository to check.
 #'
@@ -13,6 +17,6 @@ available_packages_tb <- function(cran_repo_url = "win_binary_default") {
   } else {
     search_url <- cran_repo_url
   }
-  available_packages <- available.packages(contriburl = search_url, filters = c("duplicates"), ignore_repo_cache = TRUE)
+  available_packages <- utils::available.packages(contriburl = search_url, filters = c("duplicates"), ignore_repo_cache = TRUE)
   tibble::as_tibble(available_packages)
 }
