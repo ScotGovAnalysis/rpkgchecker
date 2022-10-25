@@ -1,14 +1,24 @@
+#' Package name and version from a directory of package installs/
+#'
+#' @param server_package_dir String specifying the directory to search.
+#'
+#' @return Tibble with columns of package names and package versions.
+#' @importFrom magrittr %>%
+#' @export
+#'
+#' @examples
+#' get_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
 get_server_packages <- function(server_package_dir) {
   server_packages <- list.files(server_package_dir, pattern = "*") %>%
-    as_tibble() %>%
-    rename(server_file_name = value)
+    tibble::as_tibble() %>%
+    dplyr::rename(server_file_name = value)
 
   # Clean server packages
   server_packages <- server_packages %>%
-    separate(server_file_name, sep = "_", into = c("server_package", "server_version"), extra = "merge", fill = "right", remove = TRUE) %>%
-    mutate(
-      server_version = str_replace_all(server_version, "-", "."),
-      server_version = str_replace_all(server_version, ".zip", "")
+    tidyr::separate(server_file_name, sep = "_", into = c("server_package", "server_version"), extra = "merge", fill = "right", remove = TRUE) %>%
+    dplyr::mutate(
+      server_version = stringr::str_replace_all(server_version, "-", "."),
+      server_version = stringr::str_replace_all(server_version, ".zip", "")
     )
   return(server_packages)
 }
