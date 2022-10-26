@@ -4,7 +4,7 @@
 #' This will extract the matrix from the specified CRAN repository
 #' and convert it to a tibble.
 #'
-#' @param repo_url The url of the CRAN repository to check.
+#' @param cran_repo_url The url of the CRAN repository to check.
 #'
 #' @return Tibble of all available packages and details.
 #' @export
@@ -13,7 +13,7 @@
 #' available_packages_tb()
 available_packages_tb <- function(cran_repo_url = "win_binary_default") {
   if (cran_repo_url == "win_binary_default") {
-    search_url <- contrib.url(
+    search_url <- utils::contrib.url(
       repos = "https://cran.r-project.org/",
       type = "win.binary"
     )

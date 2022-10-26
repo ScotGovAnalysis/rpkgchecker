@@ -1,5 +1,5 @@
 
-#' Title
+#' Check installed R version meets minimum for packages.
 #'
 #' @param required_packages Tibble of required packages.
 #'
@@ -22,9 +22,9 @@ check_r_version <- function(required_packages) {
       sep = "(?=\\d)", into = c("r_comparator", "r_install_version"), remove = TRUE, extra = "merge",
       fill = "right"
     ) %>%
-    dplyr::mutate(.data$r_install_version = stringr::str_replace_all(.data$r_install_version, "\\)", ""))
+    dplyr::mutate(r_install_version = stringr::str_replace_all(.data$r_install_version, "\\)", ""))
   r_current_version <- paste0(R.Version()$major, ".", R.Version()$minor)
-  exceed_version <- r_requirements %>% filter(.data$r_install_version > .data$r_current_version)
+  exceed_version <- r_requirements %>% dplyr::filter(.data$r_install_version > r_current_version)
   if (nrow(exceed_version) > 0) {
     return(exceed_version)
   } else {

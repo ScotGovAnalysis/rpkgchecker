@@ -10,10 +10,10 @@ add_dep_packages <- function(packages_long, package_v) {
   # required packages - append them to vector
   dep_packages <-
     packages_long %>%
-    dplyr::filter(package %in% package_v) %>%
-    dplyr::distinct(dep_package) %>%
-    dplyr::filter(dep_package != "R" &
-      !dep_package %in% package_v) %>%
+    dplyr::filter(.data$package %in% package_v) %>%
+    dplyr::distinct(.data$dep_package) %>%
+    dplyr::filter(.data$dep_package != "R" &
+      !.data$dep_package %in% package_v) %>%
     tibble::deframe()
   c(package_v, dep_packages)
 }
@@ -26,6 +26,8 @@ add_dep_packages <- function(packages_long, package_v) {
 #' @param packages_long Tibble of all available packages with dependencies in
 #' long format, i.e. output of available_packages_long()
 #' @param package_name Name of a specific R package to check
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
 #'
 #' @return Tibble showing input package and dependent packages, their minimum R
 #' version and minimum package version.
@@ -33,70 +35,69 @@ add_dep_packages <- function(packages_long, package_v) {
 #'
 #' @examples
 #' # Get required packages tibble for dplyr
-#' get_required_packages(
-#'   cleaned_all_package_df =
-#'     get_cleaned_available_packages(), package_name = "dplyr"
-#' )
+#' search_required_packages(
+#'   packages_long = available_packages_long(), package_name = "dplyr")
+#'
 search_required_packages <- function(packages_long, package_name) {
   # Initial vector just has input package
   required_packages <- c(package_name)
   # Recursively add dependent packages to vector
   while (!setequal(
     required_packages,
-    add_dep_packages(cleaned_all_package_df, required_packages)
+    add_dep_packages(packages_long, required_packages)
   )) {
     required_packages <-
-      add_dep_packages(cleaned_all_package_df, required_packages)
+      add_dep_packages(packages_long, required_packages)
   }
 
   # Create the initial output df - columns on versions and dependencies added
   # to this
   requirements_output <-
-    cleaned_all_package_df %>%
-    filter(package %in% required_packages) %>%
-    select(package, version, package_url) %>%
-    rename(latest_version = version) %>%
-    distinct()
+    packages_long %>%
+    dplyr::filter(.data$package %in% required_packages) %>%
+    dplyr::select(.data$package, .data$version, .data$package_url) %>%
+    dplyr::rename(latest_version = .data$version) %>%
+    dplyr::distinct()
 
   # Filter the required R dependencies
   r_version <-
-    cleaned_all_package_df %>%
-    filter(package %in% required_packages &
-      dep_package == "R") %>%
-    select(package, dependencies) %>%
-    rename(r_version = dependencies)
+    packages_long %>%
+    dplyr::filter(.data$package %in% required_packages &
+      .data$dep_package == "R") %>%
+    dplyr::select(.data$package, .data$dependencies) %>%
+    dplyr::rename(r_version = .data$dependencies)
   # Join this to the output
   requirements_output <-
-    requirements_output %>% left_join(r_version, by = "package")
+    requirements_output %>% dplyr::left_join(r_version, by = "package")
 
   # Get other dependent packages aside from R itself and max version of package
   # required where it is a dependent
   dep_versions <-
-    cleaned_all_package_df %>%
-    filter(package %in% required_packages &
-      (dep_package != "R") &
-      (!is.na(dep_version))) %>%
-    group_by(dep_package) %>%
-    summarise(dep_version = max(dep_version))
+    packages_long %>%
+    dplyr::filter(.data$package %in% required_packages &
+      (.data$dep_package != "R") &
+      (!is.na(.data$dep_version))) %>%
+    dplyr::group_by(.data$dep_package) %>%
+    dplyr::summarise(dep_version = max(.data$dep_version))
 
 
   # Get the max dep package version columns that want, i.e. the dependencies
   # column showing for example 'Rcpp(>=1.0.9)'
   dep_versions <-
-    cleaned_all_package_df %>%
-    filter(package %in% required_packages &
-      (dep_package != "R") &
-      (!is.na(dep_version))) %>%
-    inner_join(dep_versions,
+    packages_long %>%
+    dplyr::filter(.data$package %in% required_packages &
+      (.data$dep_package != "R") &
+      (!is.na(.data$dep_version))) %>%
+    dplyr::inner_join(dep_versions,
       by = c(dep_package = "dep_package", dep_version = "dep_version")
     ) %>%
-    select(dep_package, dependencies) %>%
-    rename(package_version_required = dependencies) %>%
-    distinct(dep_package, package_version_required)
+    dplyr::select(.data$dep_package, .data$dependencies) %>%
+    dplyr::rename(package_version_required = .data$dependencies) %>%
+    dplyr::distinct(.data$dep_package, .data$package_version_required)
 
   # Join the version required to the output dataframe
   requirements_output <-
-    requirements_output %>% left_join(dep_versions,
+    requirements_output %>% dplyr::left_join(dep_versions,
       by = c(package = "dep_package")
     )
 

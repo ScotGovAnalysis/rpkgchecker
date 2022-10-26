@@ -7,7 +7,7 @@
 available_packages_tb(cran_repo_url = "win_binary_default")
 }
 \arguments{
-\item{repo_url}{The url of the CRAN repository to check.}
+\item{cran_repo_url}{The url of the CRAN repository to check.}
 }
 \value{
 Tibble of all available packages and details.

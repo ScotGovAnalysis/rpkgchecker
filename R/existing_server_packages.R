@@ -7,23 +7,23 @@
 #' @export
 #'
 #' @examples
-#' get_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
+#' existing_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
 existing_server_packages <- function(server_package_dir) {
   server_packages <- list.files(server_package_dir, pattern = "*") %>%
     tibble::as_tibble() %>%
-    dplyr::rename(server_file_name = value)
+    dplyr::rename(server_file_name = .data$value)
 
   # Clean server packages
   server_packages <- server_packages %>%
-    tidyr::separate(server_file_name,
+    tidyr::separate(.data$server_file_name,
       sep = "_", into = c("server_package", "server_version"), extra = "merge",
       fill = "right", remove = TRUE
     ) %>%
     dplyr::mutate(
       server_version =
-        stringr::str_replace_all(server_version, "-", "."),
+        stringr::str_replace_all(.data$server_version, "-", "."),
       server_version = stringr::str_replace_all(
-        server_version,
+        .data$server_version,
         ".zip", ""
       )
     )

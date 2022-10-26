@@ -16,5 +16,5 @@ Tibble with columns of package names and package versions.
 Package name and version from a directory of package installs/
 }
 \examples{
-get_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
+existing_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
 }
