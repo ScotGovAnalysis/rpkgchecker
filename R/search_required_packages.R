@@ -36,8 +36,8 @@ add_dep_packages <- function(packages_long, package_v) {
 #' @examples
 #' # Get required packages tibble for dplyr
 #' search_required_packages(
-#'   packages_long = available_packages_long(), package_name = "dplyr")
-#'
+#'   packages_long = available_packages_long(), package_name = "dplyr"
+#' )
 search_required_packages <- function(packages_long, package_name) {
   # Initial vector just has input package
   required_packages <- c(package_name)
