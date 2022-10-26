@@ -15,10 +15,17 @@ existing_server_packages <- function(server_package_dir) {
 
   # Clean server packages
   server_packages <- server_packages %>%
-    tidyr::separate(server_file_name, sep = "_", into = c("server_package", "server_version"), extra = "merge", fill = "right", remove = TRUE) %>%
+    tidyr::separate(server_file_name,
+      sep = "_", into = c("server_package", "server_version"), extra = "merge",
+      fill = "right", remove = TRUE
+    ) %>%
     dplyr::mutate(
-      server_version = stringr::str_replace_all(server_version, "-", "."),
-      server_version = stringr::str_replace_all(server_version, ".zip", "")
+      server_version =
+        stringr::str_replace_all(server_version, "-", "."),
+      server_version = stringr::str_replace_all(
+        server_version,
+        ".zip", ""
+      )
     )
   return(server_packages)
 }
