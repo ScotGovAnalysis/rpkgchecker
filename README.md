@@ -5,7 +5,7 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-Tools to check R package dependencies, minimum R versions and comparison will local copy of package installs.
+Tools to check R package dependencies, minimum R versions and comparison with internal copy of package install files.
 
 ## Installation
 
