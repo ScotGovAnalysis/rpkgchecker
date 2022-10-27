@@ -56,7 +56,7 @@ search_required_packages <- function(packages_long, package_name) {
     packages_long %>%
     dplyr::filter(.data$package %in% required_packages) %>%
     dplyr::select(.data$package, .data$version, .data$package_url) %>%
-    dplyr::rename(latest_version = .data$version) %>%
+    dplyr::rename(cran_repo_version = .data$version) %>%
     dplyr::distinct()
 
   # Filter the required R dependencies
