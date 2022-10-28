@@ -19,6 +19,8 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
     dplyr::mutate(package_url = paste0(.data$repository, "/", .data$package, ".zip")) %>%
     # Select relevant columns
     dplyr::select(.data$package, .data$version, .data$package_url, .data$depends, .data$imports) %>%
+    # Clean version column so no - only . for comparison queries
+    dplyr::mutate(version=stringr::str_replace_all(.data$version, "-", ".")) %>%
     # Only interested in depends and imports packages - make these long format
     tidyr::pivot_longer(
       cols = c(.data$depends, .data$imports),
