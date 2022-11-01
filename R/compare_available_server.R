@@ -32,10 +32,14 @@ compare_available_server <- function(required_packages, server_packages) {
     ) %>%
     # get version number inside bracket
     dplyr::mutate(server_status = dplyr::case_when(
-      .data$server_version < .data$min_package_version ~ "server version need upgrading",
-      .data$server_version >= .data$min_package_version ~ "server version currently OK",
       is.na(.data$min_package_version)
       & !is.na(.data$server_version) ~ "server version currently OK",
-      is.na(.data$server_version) ~ "package not currently on server"
+      is.na(.data$server_version) ~ "package not currently on server",
+      numeric_version(.data$server_version, strict = FALSE) <
+        numeric_version(.data$min_package_version, strict = FALSE)
+      ~ "server version need upgrading",
+      numeric_version(.data$server_version, strict = FALSE) >=
+        numeric_version(.data$min_package_version, strict = FALSE)
+      ~ "server version currently OK"
     ))
 }

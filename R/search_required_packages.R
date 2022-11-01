@@ -26,6 +26,9 @@ add_dep_packages <- function(packages_long, package_v) {
 #' @param packages_long Tibble of all available packages with dependencies in
 #' long format, i.e. output of available_packages_long()
 #' @param package_name Name of a specific R package to check
+#' @param package_version_number Optional version number required. Will show a
+#' message if available version less than or greater than this.
+#'
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
 #'
@@ -38,7 +41,18 @@ add_dep_packages <- function(packages_long, package_v) {
 #' search_required_packages(
 #'   packages_long = available_packages_long(), package_name = "dplyr"
 #' )
-search_required_packages <- function(packages_long, package_name) {
+search_required_packages <- function(packages_long,
+                                     package_name,
+                                     package_version_number = NA) {
+  if ((!(is.na(package_name)) & (!stringr::str_detect(package_version_number,
+    pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
+  )))) {
+    stop(strwrap(paste(
+      package_version_number,
+      "is not a valid version number. Set as NA if latest compatible
+       version required."
+    )))
+  }
   # Initial vector just has input package
   required_packages <- c(package_name)
   # Recursively add dependent packages to vector
@@ -56,7 +70,7 @@ search_required_packages <- function(packages_long, package_name) {
     packages_long %>%
     dplyr::filter(.data$package %in% required_packages) %>%
     dplyr::select(.data$package, .data$version, .data$package_url) %>%
-    dplyr::rename(latest_version = .data$version) %>%
+    dplyr::rename(cran_repo_version = .data$version) %>%
     dplyr::distinct()
 
   # Filter the required R dependencies
@@ -101,5 +115,29 @@ search_required_packages <- function(packages_long, package_name) {
       by = c(package = "dep_package")
     )
 
+  # check that search package version is available
+  pkg_available_version <- requirements_output %>%
+    filter(.data$package == package_name) %>%
+    pull(.data$cran_repo_version)
+
+  # warn if search version != available version
+  if (!is.na(package_version_number) &
+    (pkg_available_version != package_version_number)) {
+    warning(strwrap(paste(
+      package_name, "version", package_version_number,
+      "is not available in the CRAN repository searched. Version",
+      pkg_available_version, "is available."
+    )))
+  }
+
+  # Set the search package CRAN version as the required version
+  requirements_output <- requirements_output %>%
+    mutate(package_version_required = case_when(
+    .data$package == package_name ~ paste0(
+      package_name, "(>=",
+      pkg_available_version, ")"
+    ),
+    TRUE ~ package_version_required
+  ))
   return(requirements_output)
 }
