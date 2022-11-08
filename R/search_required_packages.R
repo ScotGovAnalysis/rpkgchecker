@@ -1,9 +1,3 @@
-library(tibble)
-library(dplyr)
-library(tidyr)
-library(stringr)
-library(readr)
-
 #' @importFrom magrittr %>%
 add_dep_packages <- function(packages_long, package_v) {
   # Helper function find any dependent packages not in current input vector of
