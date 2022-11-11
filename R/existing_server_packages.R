@@ -29,6 +29,9 @@ existing_server_packages <- function(server_package_dir) {
     # versions so group by max is way of having distinct list of packages
     # with max version only
     dplyr::group_by(.data$server_package) %>%
-    dplyr::summarise(server_version =
-                       max(numeric_version(.data$server_version)))
+    dplyr::summarise(
+      server_version =
+        max(numeric_version(.data$server_version))
+    ) %>%
+    dplyr::mutate(server_version = as.character(.data$server_version))
 }

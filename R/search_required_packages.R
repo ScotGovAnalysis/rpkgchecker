@@ -38,7 +38,7 @@ add_dep_packages <- function(packages_long, package_v) {
 search_required_packages <- function(packages_long,
                                      package_name,
                                      package_version_number = NA) {
-  if ((!(is.na(package_name)) & (!stringr::str_detect(package_version_number,
+  if ((!(is.na(package_version_number)) & (!stringr::str_detect(package_version_number,
     pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
   )))) {
     stop(strwrap(paste(
@@ -86,7 +86,8 @@ search_required_packages <- function(packages_long,
       (.data$dep_package != "R") &
       (!is.na(.data$dep_version))) %>%
     dplyr::group_by(.data$dep_package) %>%
-    dplyr::summarise(dep_version = max(.data$dep_version))
+    dplyr::summarise(dep_version = max(numeric_version(.data$dep_version))) %>%
+    dplyr::mutate(dep_version = as.character(.data$dep_version))
 
 
   # Get the max dep package version columns that want, i.e. the dependencies
@@ -111,8 +112,9 @@ search_required_packages <- function(packages_long,
 
   # check that search package version is available
   pkg_available_version <- requirements_output %>%
-    filter(.data$package == package_name) %>%
-    pull(.data$cran_repo_version)
+    dplyr::filter(.data$package == package_name) %>%
+    dplyr::pull(.data$cran_repo_version)
+
 
   # warn if search version != available version
   if (!is.na(package_version_number) &
@@ -126,12 +128,12 @@ search_required_packages <- function(packages_long,
 
   # Set the search package CRAN version as the required version
   requirements_output <- requirements_output %>%
-    mutate(package_version_required = case_when(
-    .data$package == package_name ~ paste0(
-      package_name, "(>=",
-      pkg_available_version, ")"
-    ),
-    TRUE ~ package_version_required
-  ))
+    dplyr::mutate(package_version_required = dplyr::case_when(
+      .data$package == package_name ~ paste0(
+        package_name, "(>=",
+        pkg_available_version, ")"
+      ),
+      TRUE ~ package_version_required
+    ))
   return(requirements_output)
 }
