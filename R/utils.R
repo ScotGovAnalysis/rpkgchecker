@@ -6,7 +6,7 @@ custom_sort_package_df <- function(target_package, results_df,
     c(
       target_package,
       results_df %>%
-        dplyr::filter(.data[[package_column]] != target_package) %>%
+        dplyr::filter(! .data[[package_column]] %in% target_package) %>%
         dplyr::pull({{ package_column }})
     ) %>%
     unique()
@@ -25,7 +25,7 @@ add_dep_packages <- function(packages_long, package_v) {
     dplyr::distinct(.data$dep_package) %>%
     dplyr::filter(.data$dep_package != "R" &
       !.data$dep_package %in% package_v) %>%
-    tibble::deframe(.data)
+    tibble::deframe()
   c(package_v, dep_packages)
 }
 
