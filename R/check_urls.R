@@ -25,7 +25,7 @@ check_urls <- function(check_tb, url_column = "package_url",
     ))
   # If no urls could be verified might mean proxy server needed for check
   not_verified <- request_tb %>% dplyr::filter(.data$url_ok == FALSE)
-  if (nrow(not_verified == nrow(request_tb))) {
+  if (nrow(not_verified) == nrow(request_tb)) {
     warning("Could not verify any urls. Check if need to specify proxy.")
   }
   return(request_tb)
