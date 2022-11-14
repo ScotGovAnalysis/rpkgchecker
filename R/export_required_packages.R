@@ -37,17 +37,7 @@ export_required_packages <- function(compare_tb,
 
   # Optionally check urls using RCurl
   if (verify_urls) {
-    url_opts <- list(proxy = verify_url_proxy)
-    request_tb <- request_tb %>%
-      dplyr::mutate(url_ok = sapply(.data$package_url,
-        RCurl::url.exists,
-        .opts = url_opts
-      ))
-    # If no urls could be verified might mean proxy server needed for check
-    not_verified <- request_tb %>% dplyr::filter(.data$url_ok == FALSE)
-    if (nrow(not_verified == nrow(request_tb))) {
-      warning("Could not verify any urls. Check if need to specify proxy.")
-    }
+    request_tb <- check_urls(request_tb, "package_url", verify_url_proxy)
   } else {
     request_tb <- request_tb %>% dplyr::mutate(url_ok = "not checked")
   }
