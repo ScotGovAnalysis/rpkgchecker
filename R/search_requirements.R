@@ -4,7 +4,7 @@
 #'
 #' @param packages_long Tibble of all available packages with dependencies in
 #' long format, i.e. output of available_packages_long().
-#' @param package_names Package name to search / packages in a character vector.
+#' @param package_name Package name to search.
 #' @param package_version_number Optional version number required. Will show a
 #' message if available version less than or greater than this.
 #'
