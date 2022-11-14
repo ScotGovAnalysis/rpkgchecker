@@ -20,7 +20,10 @@ version and minimum package version.
 Find all dependencies for multiple input search packages.
 }
 \examples{
+# Search for all existing packages on a server...
+# Get existing server packages
 server_tb <- existing_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
+# Search for their requirements by passing the server_package column vector
 search_requirements_multiple(
   packages_long = available_packages_long(),
   package_names = server_tb$server_package
