@@ -24,5 +24,5 @@ depending on if URL works.
 search_tb <- search_requirements(
   packages_long = available_packages_long(), package_name = "dplyr"
 )
-search_tb <- verify_urls(search_tb)
+search_tb <- check_urls(search_tb)
 }
