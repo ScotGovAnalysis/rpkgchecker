@@ -25,7 +25,9 @@ for packages and dependent packages, for example:
 
 ## Which CRAN repository of packages is searched
 
-The process makes use of the base R `available.packages` function.
+The process makes use of the base R
+[`available.packages`](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/available.packages)
+function.
 
 The `contriburl` argument of `available.packages` allows to specify the
 URL for a particular CRAN repository.
