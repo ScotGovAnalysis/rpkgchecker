@@ -34,19 +34,12 @@ The `contriburl` argument of `available.packages` allows to specify the URL for 
 
 In turn, the **rpkgchecker** functions `available_packages_tb` and `available_packages_long` allow for a specific CRAN repository to be specified with the `cran_repo_url` argument. 
 
-By default `cran_repo_url` is set to search compiled Windows Binary repositories based on the R release being used while running the function.  
+By default `cran_repo_url` is set to search compiled Windows Binary repositories based on the R release being used while running the function. This can be achieved using `available.packages` argument `type="win.binary"`.
 
-With the default `cran_repo_url` argument, the code below is used to derive the Windows Binary URL for the current R release and then search it in `available.packages`:
 
-```r
-search_url <- utils::contrib.url(
-      repos = "https://cran.r-project.org/",
-      type = "win.binary"
-    )
-```
-For example, if using R 3.6.3, then the `search_url` returned from the above code will be `https://cran.r-project.org/bin/windows/contrib/3.6` (assuming not using release of R that is so old that Windows binaries are no longer stored).
+For example, if using R 3.6.3, then by default the URL searched will be `https://cran.r-project.org/bin/windows/contrib/3.6`  
 
-The `available.packages` function then can search this URL returning package versions and dependencies relevant to that release of R, not the latest release (see code below). Note `available.packages` is querying a `PACKAGES` yaml type file that should be present in each repository of R packages.
+If wish to search for a specific CRAN repository specify this in the `cran_repo_url` options.
 
 ```r    
   available_packages <- utils::available.packages(
@@ -91,7 +84,7 @@ compare_tb <- compare_available_server(required_tb, server_tb)
 request_tb <- export_required_packages(compare_tb, "C:/repos")
 ```
 
-## Acquiring searching dependencies for all existing packages on a server
+## Searching dependencies for all existing packages on a server
 
 In locked down IT situations, might have a server inside the organisation's firewall storing R packages for install internally.  
 

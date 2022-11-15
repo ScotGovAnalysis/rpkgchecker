@@ -104,7 +104,7 @@ compare_tb <- compare_available_server(required_tb, server_tb)
 request_tb <- export_required_packages(compare_tb, "C:/repos")
 ```
 
-## Acquiring searching dependencies for all existing packages on a server
+## Searching dependencies for all existing packages on a server
 
 In locked down IT situations, might have a server inside the
 organisation’s firewall storing R packages for install internally.
