@@ -20,4 +20,5 @@ Imports:
     readr,
     rlang,
     tibble,
-    rmarkdown
+    rmarkdown,
+    RCurl

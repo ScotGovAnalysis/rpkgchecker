@@ -3,6 +3,7 @@
 export(available_packages_long)
 export(available_packages_tb)
 export(check_r_version)
+export(check_urls)
 export(compare_available_server)
 export(existing_server_packages)
 export(export_required_packages)

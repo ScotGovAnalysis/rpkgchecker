@@ -24,7 +24,7 @@ Packages have requirements on other packages via depends, imports.
 }
 \examples{
 # Get required packages tibble for dplyr
-search_requirements(
+search_tb <- search_requirements(
   packages_long = available_packages_long(), package_name = "dplyr"
 )
 }
