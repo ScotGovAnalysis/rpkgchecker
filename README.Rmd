@@ -75,9 +75,9 @@ server_tb <- existing_server_packages("//s1428a/R_Packages/R_3_6_3_Packages")
 
 # compare the required packages with those on the server currently and indicate
 # which need to be acquired or upgraded
-compare_tb <- compare_available_server(required_tb, server_tb)
+compare_tb <- compare_available_server(search_tb, server_tb)
 
-# export a csv file of just those packages need to request
+# return and export a csv file of just those packages need to request
 # i.e. not on server currently or need upgrading
 request_tb <- export_required_packages(compare_tb, "C:/repos")
 ```
