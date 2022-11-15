@@ -23,7 +23,7 @@ for packages and dependent packages, for example:
   - If wish to acquire a new copy of all packages on a server currently
     and any check for any new dependencies.
 
-## Which copy of CRAN is searched
+## Which CRAN repository of packages is searched
 
 The process makes use of the base R `available.packages` function.
 
@@ -36,39 +36,25 @@ specified with the `cran_repo_url` argument.
 
 By default `cran_repo_url` is set to search compiled Windows Binary
 repositories based on the R release being used while running the
-function.
+function. This can normally be achieved simply by using
+`available.packages` argument `type="win.binary"`.
 
-With the default `cran_repo_url` argument, the code below is used to
-derive the Windows Binary URL for the current R release and then search
-it in `available.packages`:
+For example, if using R 3.6.3, then by default the URL searched using
+**rpkgchecker** functions `available_packages_tb` and
+`available_packages_long` will be
+`https://cran.r-project.org/bin/windows/contrib/3.6`
 
-``` r
-search_url <- utils::contrib.url(
-      repos = "https://cran.r-project.org/",
-      type = "win.binary"
-    )
-```
-
-For example, if using R 3.6.3, then the `search_url` returned from the
-above code will be `https://cran.r-project.org/bin/windows/contrib/3.6`
-(assuming not using release of R that is so old that Windows binaries
-are no longer stored).
-
-The `available.packages` function then can search this URL returning
-package versions and dependencies relevant to that release of R, not the
-latest release (see code below). Note `available.packages` is querying a
-`PACKAGES` yaml type file that should be present in each repository of R
-packages.
+If wish to search a specific R package collection, for example for a
+different R release to that being used when running the function, or for
+non-Windows binaries, specify this in the `cran_repo_url` argument as
+shown below.
 
 ``` r
-  available_packages <- utils::available.packages(
-    contriburl = search_url,
-    filters = c("duplicates"), ignore_repo_cache = TRUE
-  )    
+  # Search repository of R release 4.2 compiled Windows binaries
+  # Regardless of R version being used.
+  available_tb <- available_packages_tb(cran_repo_url=
+                  "https://cran.r-project.org/bin/windows/contrib/4.2")    
 ```
-
-In locked down, Windows-based IT systems, where R release being used may
-be older, we think this is the most useful package repository to search.
 
 ## Installation
 
