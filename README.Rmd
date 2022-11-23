@@ -30,14 +30,14 @@ Provides tools to check R package dependencies, minimum R versions and compariso
 ## Which CRAN repository of packages is searched
 The process makes use of the base R [`available.packages`](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/available.packages) function.  
 
-The `contriburl` argument of `available.packages` allows to specify the URL for a particular CRAN repository.  
+The `contriburl` argument of `available.packages` is one way to specify the URL for a particular CRAN repository.  
 
 In turn, the **rpkgchecker** functions `available_packages_tb` and `available_packages_long` allow for a specific CRAN repository to be specified with the `cran_repo_url` argument. 
 
 By default `cran_repo_url` is set to search compiled Windows Binary repositories based on the R release being used while running the function. This can normally be achieved simply by using `available.packages` argument `type="win.binary"`.
 
 
-For example, if using R 3.6.3, then by default the URL searched using **rpkgchecker** functions `available_packages_tb` and `available_packages_long` will be `https://cran.r-project.org/bin/windows/contrib/3.6`  
+For example, if using R 3.6.3, then by default the URL searched using **rpkgchecker** functions `available_packages_tb` and `available_packages_long` will be https://cran.r-project.org/bin/windows/contrib/3.6    
 
 If wish to search a specific R package collection, for example for a different R release to that being used when running the function, or for non-Windows binaries, specify this in the `cran_repo_url` argument as shown below.
 
@@ -53,7 +53,7 @@ If wish to search a specific R package collection, for example for a different R
 Install the package from GitHub with devtools.
 
 ``` r
-devtools::install_github("tomwilsonsco/rpkgchecker@main")
+devtools::install_github("datasciencescotland/rpkgchecker@main")
 ```
 
 ## Example
