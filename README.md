@@ -29,8 +29,8 @@ The process makes use of the base R
 [`available.packages`](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/available.packages)
 function.
 
-The `contriburl` argument of `available.packages` allows to specify the
-URL for a particular CRAN repository.
+The `contriburl` argument of `available.packages` is one way to specify
+the URL for a particular CRAN repository.
 
 In turn, the **rpkgchecker** functions `available_packages_tb` and
 `available_packages_long` allow for a specific CRAN repository to be
@@ -44,7 +44,7 @@ function. This can normally be achieved simply by using
 For example, if using R 3.6.3, then by default the URL searched using
 **rpkgchecker** functions `available_packages_tb` and
 `available_packages_long` will be
-`https://cran.r-project.org/bin/windows/contrib/3.6`
+<https://cran.r-project.org/bin/windows/contrib/3.6>
 
 If wish to search a specific R package collection, for example for a
 different R release to that being used when running the function, or for
