@@ -41,6 +41,11 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
       dependencies =
         stringr::str_remove_all(.data$dependencies, "\\s")
     ) %>%
+    # replace - with . (safe to do as "-" not valid char in an R package name)
+    dplyr::mutate(
+      dependencies =
+        stringr::str_replace_all(.data$dependencies, "-", "\\.")
+    ) %>%
     # Split package name from required version into separate columns
     tidyr::separate(.data$dependencies,
       sep = "\\(", into = c("dep_package", "dep_version"),
@@ -56,11 +61,10 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
       extra = "merge",
       fill = "right"
     ) %>%
-    # Remove the trailing bracket from the version and replace = with .
+    # Remove the trailing bracket from the version
 
     # in version numbers
     dplyr::mutate(
-      dep_version = stringr::str_replace_all(.data$dep_version, "\\)", ""),
-      dep_version = stringr::str_replace_all(.data$dep_version, "-", "\\.")
+      dep_version = stringr::str_replace_all(.data$dep_version, "\\)", "")
     )
 }
