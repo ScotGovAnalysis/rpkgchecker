@@ -63,7 +63,7 @@ shown below.
 Install the package from GitHub with devtools.
 
 ``` r
-devtools::install_github("tomwilsonsco/rpkgchecker@main")
+devtools::install_github("datasciencescotland/rpkgchecker@main")
 ```
 
 ## Example

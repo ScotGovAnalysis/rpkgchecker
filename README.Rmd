@@ -53,7 +53,7 @@ If wish to search a specific R package collection, for example for a different R
 Install the package from GitHub with devtools.
 
 ``` r
-devtools::install_github("tomwilsonsco/rpkgchecker@main")
+devtools::install_github("datasciencescotland/rpkgchecker@main")
 ```
 
 ## Example
