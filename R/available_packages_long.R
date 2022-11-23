@@ -15,15 +15,24 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
   available_packages_tb(cran_repo_url = cran_repo_url) %>%
     # Make column names lower case
     dplyr::rename_with(.fn = tolower) %>%
-    # Download link col
+
+    dplyr::mutate(repository = stringr::str_replace_all(
+      .data$repository, "/$", ""
+    )) %>%
+    # Create download link col
     dplyr::mutate(package_url = paste0(
       .data$repository, "/", .data$package,
       "_", .data$version, ".zip"
     )) %>%
     # Select relevant columns
-    dplyr::select(.data$package, .data$version, .data$package_url, .data$depends, .data$imports) %>%
+    dplyr::select(
+      .data$package, .data$version, .data$package_url,
+      .data$depends, .data$imports
+    ) %>%
     # Clean version column so no - only . for comparison queries
-    dplyr::mutate(version = stringr::str_replace_all(.data$version, "-", ".")) %>%
+    dplyr::mutate(version = stringr::str_replace_all(
+      .data$version, "-", "."
+    )) %>%
     # Only interested in depends and imports packages - make these long format
     tidyr::pivot_longer(
       cols = c(.data$depends, .data$imports),
@@ -41,6 +50,11 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
       dependencies =
         stringr::str_remove_all(.data$dependencies, "\\s")
     ) %>%
+    # replace - with . (safe to do as "-" not valid char in an R package name)
+    dplyr::mutate(
+      dependencies =
+        stringr::str_replace_all(.data$dependencies, "-", "\\.")
+    ) %>%
     # Split package name from required version into separate columns
     tidyr::separate(.data$dependencies,
       sep = "\\(", into = c("dep_package", "dep_version"),
@@ -56,11 +70,10 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
       extra = "merge",
       fill = "right"
     ) %>%
-    # Remove the trailing bracket from the version and replace = with .
+    # Remove the trailing bracket from the version
 
     # in version numbers
     dplyr::mutate(
-      dep_version = stringr::str_replace_all(.data$dep_version, "\\)", ""),
-      dep_version = stringr::str_replace_all(.data$dep_version, "-", "\\.")
+      dep_version = stringr::str_replace_all(.data$dep_version, "\\)", "")
     )
 }
