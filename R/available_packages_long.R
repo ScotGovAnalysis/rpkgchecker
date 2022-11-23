@@ -15,15 +15,24 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
   available_packages_tb(cran_repo_url = cran_repo_url) %>%
     # Make column names lower case
     dplyr::rename_with(.fn = tolower) %>%
-    # Download link col
+
+    dplyr::mutate(repository = stringr::str_replace_all(
+      .data$repository, "/$", ""
+    )) %>%
+    # Create download link col
     dplyr::mutate(package_url = paste0(
       .data$repository, "/", .data$package,
       "_", .data$version, ".zip"
     )) %>%
     # Select relevant columns
-    dplyr::select(.data$package, .data$version, .data$package_url, .data$depends, .data$imports) %>%
+    dplyr::select(
+      .data$package, .data$version, .data$package_url,
+      .data$depends, .data$imports
+    ) %>%
     # Clean version column so no - only . for comparison queries
-    dplyr::mutate(version = stringr::str_replace_all(.data$version, "-", ".")) %>%
+    dplyr::mutate(version = stringr::str_replace_all(
+      .data$version, "-", "."
+    )) %>%
     # Only interested in depends and imports packages - make these long format
     tidyr::pivot_longer(
       cols = c(.data$depends, .data$imports),
