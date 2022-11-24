@@ -45,8 +45,15 @@ export_required_packages <- function(compare_tb,
   # Select columns wish to include in output
   request_tb <- request_tb %>% dplyr::select(
     .data$package, .data$package_url,
-    .data$cran_repo_version, .data$r_version,
+    .data$cran_repo_version, .data$package_version_required,
+    .data$server_version, .data$server_status,
     .data$url_ok
+  )
+
+  # Rename server version column
+  request_tb <- request_tb %>% dplyr::rename(
+    current_server_version =
+      .data$server_version
   )
 
   # Output file name
