@@ -23,9 +23,10 @@
 search_requirements <- function(packages_long,
                                 package_name,
                                 package_version_number = NA) {
-  if ((!(is.na(package_version_number)) & (!stringr::str_detect(package_version_number,
-    pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
-  )))) {
+  if ((!(is.na(package_version_number)) & (
+    !stringr::str_detect(package_version_number,
+      pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
+    )))) {
     stop(strwrap(paste(
       package_version_number,
       "is not a valid version number. Set as NA if latest compatible
