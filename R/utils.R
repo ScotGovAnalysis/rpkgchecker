@@ -6,7 +6,7 @@ custom_sort_package_df <- function(target_package, results_df,
     c(
       target_package,
       results_df %>%
-        dplyr::filter(! .data[[package_column]] %in% target_package) %>%
+        dplyr::filter(!.data[[package_column]] %in% target_package) %>%
         dplyr::pull({{ package_column }})
     ) %>%
     unique()
@@ -84,4 +84,9 @@ requirements_tibble <- function(packages_long, required_packages) {
     requirements_output %>% dplyr::left_join(dep_versions,
       by = c(package = "dep_package")
     )
+}
+
+# function to format multiline message, stop, warn strings due to 80 char limit
+format_message <- function(message_string) {
+  strwrap(message_string, prefix = " ", initial = "")
 }
