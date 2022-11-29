@@ -68,6 +68,9 @@ export_required_packages <- function(compare_tb,
   output_fp <- file.path(export_path, output_file)
   readr::write_csv(request_tb, output_fp)
 
-  message(paste("packages need to request written to", output_fp))
+  message(format_message(paste(
+    "packages need to request written to",
+    output_fp
+  )))
   return(request_tb)
 }

@@ -16,7 +16,7 @@
 #' )
 #' search_tb <- check_urls(search_tb)
 check_urls <- function(check_tb, url_column = "package_url",
-                        verify_url_proxy = NULL) {
+                       verify_url_proxy = NULL) {
   url_opts <- list(proxy = verify_url_proxy)
   request_tb <- check_tb %>%
     dplyr::mutate(url_ok = sapply(check_tb[[url_column]],
@@ -26,7 +26,8 @@ check_urls <- function(check_tb, url_column = "package_url",
   # If no urls could be verified might mean proxy server needed for check
   not_verified <- request_tb %>% dplyr::filter(.data$url_ok == FALSE)
   if (nrow(not_verified) == nrow(request_tb)) {
-    warning("Could not verify any urls. Check if need to specify proxy.")
+    warning(format_message("Could not verify any urls.
+                         Check if need to specify proxy."))
   }
   return(request_tb)
 }

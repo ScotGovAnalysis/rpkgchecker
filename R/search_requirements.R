@@ -23,11 +23,20 @@
 search_requirements <- function(packages_long,
                                 package_name,
                                 package_version_number = NA) {
+  # Check input OK tibble
+  stopifnot(tibble::is_tibble(packages_long),
+            "package" %in% colnames(packages_long))
+
+  # Check input package name is in tibble
+  if (!package_name %in% packages_long$package) {
+    stop(format_message(paste("search package", package_name, "not found in
+                       available packages tibble")))
+  }
   if ((!(is.na(package_version_number)) & (
     !stringr::str_detect(package_version_number,
       pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
     )))) {
-    stop(strwrap(paste(
+    stop(format_message(paste(
       package_version_number,
       "is not a valid version number. Set as NA if latest compatible
        version required."
@@ -56,7 +65,7 @@ search_requirements <- function(packages_long,
   # warn if search version != available version
   if (!is.na(package_version_number) &
     (pkg_available_version != package_version_number)) {
-    warning(strwrap(paste(
+    warning(format_message(paste(
       package_name, "version", package_version_number,
       "is not available in the CRAN repository searched. Version",
       pkg_available_version, "is available."
