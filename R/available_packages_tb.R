@@ -24,5 +24,6 @@ available_packages_tb <- function(cran_repo_url = "win_binary_default") {
     contriburl = search_url,
     filters = c("duplicates"), ignore_repo_cache = TRUE
   )
-  tibble::as_tibble(available_packages)
+  available_packages <- tibble::as_tibble(available_packages)
+  janitor::clean_names(available_packages)
 }
