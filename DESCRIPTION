@@ -20,5 +20,8 @@ Imports:
     readr,
     rlang,
     tibble,
-    rmarkdown,
-    RCurl
+    RCurl,
+    janitor
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
