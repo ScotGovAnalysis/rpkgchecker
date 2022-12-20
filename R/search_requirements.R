@@ -24,8 +24,10 @@ search_requirements <- function(packages_long,
                                 package_name,
                                 package_version_number = NA) {
   # Check input OK tibble
-  stopifnot(tibble::is_tibble(packages_long),
-            "package" %in% colnames(packages_long))
+  stopifnot(
+    tibble::is_tibble(packages_long),
+    "package" %in% colnames(packages_long)
+  )
 
   # Check input package name is in tibble
   if (!package_name %in% packages_long$package) {
