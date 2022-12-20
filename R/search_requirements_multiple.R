@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' # Search for all existing packages on a server...
 #' # Get existing server packages
 #' server_tb <- existing_server_packages("my_server/R_Packages/R_3_6_3_Packages")

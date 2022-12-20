@@ -22,7 +22,7 @@ new column "server_status", specifying if package exists and needs upgrading,
 does not exist, so needs to be acquired, or exists at the right version.
 }
 \examples{
-#' \dontrun{
+\dontrun{
 available_long_tb <- available_packages_long()
 required_tb <- search_requirements(available_long_tb, "fabletools")
 server_tb <- existing_server_packages("my_server/R_Packages/R_3_6_3_Packages")

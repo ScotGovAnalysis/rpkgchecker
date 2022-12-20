@@ -17,7 +17,9 @@ version. Or FALSE if no required packages exceed existing R install version.
 Check installed R version meets minimum for packages.
 }
 \examples{
+\dontrun{
 available_long_tb <- available_packages_long()
 search_tb <- search_requirements(available_long_tb, "fabletools")
 exceed_r_version <- check_r_version(search_tb)
+}
 }

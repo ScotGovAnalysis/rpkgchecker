@@ -10,7 +10,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' available_packages_long()
+#' }
 available_packages_long <- function(cran_repo_url = "win_binary_default") {
   available_packages_tb(cran_repo_url = cran_repo_url) %>%
     # Some urls end in / some don't

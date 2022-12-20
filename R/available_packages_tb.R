@@ -10,7 +10,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' available_packages_tb()
+#' }
 available_packages_tb <- function(cran_repo_url = "win_binary_default") {
   if (cran_repo_url == "win_binary_default") {
     search_url <- utils::contrib.url(

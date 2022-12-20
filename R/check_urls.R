@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' search_tb <- search_requirements(
 #'   packages_long = available_packages_long(), package_name = "dplyr"
 #' )

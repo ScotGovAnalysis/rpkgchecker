@@ -8,9 +8,11 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' available_long_tb <- available_packages_long()
 #' search_tb <- search_requirements(available_long_tb, "fabletools")
 #' exceed_r_version <- check_r_version(search_tb)
+#' }
 check_r_version <- function(required_packages) {
   # extract R version from column
   r_requirements <- required_packages %>%
