@@ -24,5 +24,6 @@ Imports:
     janitor
 Suggests: 
     testthat (>= 3.0.0),
-    mockery
+    mockery,
+    withr
 Config/testthat/edition: 3

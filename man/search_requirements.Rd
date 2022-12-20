@@ -23,8 +23,10 @@ version and minimum package version.
 Packages have requirements on other packages via depends, imports.
 }
 \examples{
+#' \dontrun{
 # Get required packages tibble for dplyr
 search_tb <- search_requirements(
   packages_long = available_packages_long(), package_name = "dplyr"
 )
+}
 }

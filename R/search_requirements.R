@@ -16,10 +16,12 @@
 #' @export
 #'
 #' @examples
+#' #' \dontrun{
 #' # Get required packages tibble for dplyr
 #' search_tb <- search_requirements(
 #'   packages_long = available_packages_long(), package_name = "dplyr"
 #' )
+#' }
 search_requirements <- function(packages_long,
                                 package_name,
                                 package_version_number = NA) {

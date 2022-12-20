@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' existing_server_packages("//myserver/R_Packages/R_3_6_3_Packages")
+#' existing_server_packages("//my_server/R_Packages/R_3_6_3_Packages")
 #' }
 existing_server_packages <- function(server_package_dir) {
   list.files(server_package_dir, pattern = "*.zip") %>%
