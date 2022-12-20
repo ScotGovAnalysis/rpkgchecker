@@ -10,12 +10,12 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' available_packages_long()
+#' }
 available_packages_long <- function(cran_repo_url = "win_binary_default") {
   available_packages_tb(cran_repo_url = cran_repo_url) %>%
-    # Make column names lower case
-    dplyr::rename_with(.fn = tolower) %>%
-
+    # Some urls end in / some don't
     dplyr::mutate(repository = stringr::str_replace_all(
       .data$repository, "/$", ""
     )) %>%
@@ -71,7 +71,6 @@ available_packages_long <- function(cran_repo_url = "win_binary_default") {
       fill = "right"
     ) %>%
     # Remove the trailing bracket from the version
-
     # in version numbers
     dplyr::mutate(
       dep_version = stringr::str_replace_all(.data$dep_version, "\\)", "")

@@ -16,16 +16,20 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Get required packages tibble for dplyr
 #' search_tb <- search_requirements(
 #'   packages_long = available_packages_long(), package_name = "dplyr"
 #' )
+#' }
 search_requirements <- function(packages_long,
                                 package_name,
                                 package_version_number = NA) {
   # Check input OK tibble
-  stopifnot(tibble::is_tibble(packages_long),
-            "package" %in% colnames(packages_long))
+  stopifnot(
+    tibble::is_tibble(packages_long),
+    "package" %in% colnames(packages_long)
+  )
 
   # Check input package name is in tibble
   if (!package_name %in% packages_long$package) {

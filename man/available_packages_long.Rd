@@ -17,5 +17,7 @@ imports or depends package.
 This creates a tidy format tibble of package dependencies (depends, imports).
 }
 \examples{
+\dontrun{
 available_packages_long()
+}
 }

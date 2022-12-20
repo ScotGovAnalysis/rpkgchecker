@@ -18,5 +18,7 @@ This will extract the matrix from the specified CRAN repository
 and convert it to a tibble.
 }
 \examples{
+\dontrun{
 available_packages_tb()
+}
 }

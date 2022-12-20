@@ -17,8 +17,4 @@ outputs/
 # SPSS formats #
 *.[sS][aA][vV]
 
-# R data files #
-*.[rR][dD][aA][tT][aA]
-*.[rR][dD][sS]
-
 *.[hH][tT][mM][lL]

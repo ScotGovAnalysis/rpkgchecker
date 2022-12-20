@@ -7,6 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R-CMD-check](https://github.com/DataScienceScotland/rpkgchecker/workflows/R-CMD-check/badge.svg)](https://github.com/DataScienceScotland/rpkgchecker/actions)
 <!-- badges: end -->
 
 Provides tools to check R package dependencies, minimum R versions and
