@@ -1,3 +1,15 @@
+check_url <- function(url, proxy) {
+  !tryCatch(
+    {
+      httr::http_error(url, httr::use_proxy(proxy))
+    },
+    error = function(e) {
+      TRUE
+    }
+  )
+}
+
+
 #' Check if urls in a specified column are genuine.
 #'
 #' A column will be added to the input dataframe "url_ok" with TRUE or FALSE
@@ -19,11 +31,11 @@
 #' }
 check_urls <- function(check_tb, url_column = "package_url",
                        verify_url_proxy = NULL) {
-  url_opts <- list(proxy = verify_url_proxy)
   request_tb <- check_tb %>%
-    dplyr::mutate(url_ok = sapply(check_tb[[url_column]],
-      RCurl::url.exists,
-      .opts = url_opts
+    dplyr::mutate(url_ok = sapply(
+      check_tb[[url_column]],
+      check_url,
+      verify_url_proxy
     ))
   # If no urls could be verified might mean proxy server needed for check
   not_verified <- request_tb %>% dplyr::filter(.data$url_ok == FALSE)
